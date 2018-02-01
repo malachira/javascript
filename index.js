@@ -1,6 +1,12 @@
 // Get references to the tbody element, input field and button
 var $tbody = document.querySelector("tbody");
+
 var $dateInput = document.querySelector("#date_time");
+var $cityInput = document.querySelector("#city");
+var $stateInput = document.querySelector("#state");
+var $countryInput = document.querySelector("#country");
+var $shapeInput = document.querySelector("#shape");
+
 var $searchBtn = document.querySelector("#search");
 
 // Add an event listener to the searchButton, call handleSearchButtonClick when clicked
@@ -30,15 +36,31 @@ function renderTable() {
 function handleSearchButtonClick() {
   // Format the user's search by removing leading and trailing whitespace, lowercase the string
   var filterdate = $dateInput.value.trim();
-  console.log(filterdate);
+  var filtercity = $cityInput.value.trim();
+  var filterstate = $stateInput.value.trim();
+  var filtercountry = $countryInput.value.trim();
+  var filtershape = $shapeInput.value.trim();
 
-  // Set filteredAddresses to an array of all addresses whose "state" matches the filter
-  filtersightings = dataSet.filter(function(data) {
-  var date_time = data.datetime.trim();
+  //start with all values
+  filtersightings = dataSet
 
-    // If true, add the address to the filteredAddresses, otherwise don't add it to filteredAddresses
-    return date_time === filterdate;
-  });
+  //Sequentially filter through all requested search items
+  if (filterdate != ""){
+    filtersightings = dataSet.filter(x=>x.datetime==filterdate)
+  }
+  if (filtercity != ""){
+    filtersightings = filtersightings.filter(x=>x.city==filtercity)
+  }
+  if (filterstate != ""){
+    filtersightings = filtersightings.filter(x=>x.state==filterstate)
+  }
+  if (filtercountry != ""){
+    filtersightings = filtersightings.filter(x=>x.country==filtercountry)
+  }
+  if (filtershape != ""){
+    filtersightings = filtersightings.filter(x=>x.shape==filtershape)
+  }
+  
   renderTable();
 }
 
