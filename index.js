@@ -14,13 +14,22 @@ $searchBtn.addEventListener("click", handleSearchButtonClick);
 
 // Set filteredAddresses to addressData initially
 var filtersightings = dataSet;
+var new_filtersightings;
+var entries_per_page = 1000;
+
+var start = 0;
+var end = entries_per_page;
 
 // renderTable renders the filteredAddresses to the tbody
 function renderTable() {
   $tbody.innerHTML = "";
-  for (var i = 0; i < filtersightings.length; i++) {
+
+  console.log("in render table");
+  console.log(new_filtersightings.length);
+
+  for (var i = 0; i < new_filtersightings.length; i++) {
     // Get get the current address object and its fields
-    var sightings = filtersightings[i];
+    var sightings = new_filtersightings[i];
     var fields = Object.keys(sightings);
     // Create a new row in the tbody, set the index to be i + startingIndex
     var $row = $tbody.insertRow(i);
@@ -31,6 +40,34 @@ function renderTable() {
       $cell.innerText = sightings[field];
     }
   }
+}
+
+function renderPage(){
+
+  var num_pages = filtersightings.length/entries_per_page;
+
+  console.log(filtersightings.length);
+
+  var page_list = d3.select(".pagination")
+
+  for (var i=0; i<num_pages; i++){
+    page_list.append("li")
+    .append("a")
+    .attr("href","#")
+    .text(i+1)
+    .on("click", function(data, index) {
+        var pg_num = +this.innerText;
+        var new_start = (pg_num - 1) * entries_per_page;
+        var new_end = new_start + entries_per_page;
+        new_filtersightings = filtersightings.slice(new_start, new_end);
+        console.log(new_start, new_end)
+        renderTable();
+    })
+  }
+
+  new_filtersightings = filtersightings.slice(start, end);
+
+  renderTable();
 }
 
 function handleSearchButtonClick() {
@@ -61,8 +98,8 @@ function handleSearchButtonClick() {
     filtersightings = filtersightings.filter(x=>x.shape==filtershape)
   }
   
-  renderTable();
+  renderPage();
 }
 
 // Render the table for the first time on page load
-renderTable();
+renderPage();
